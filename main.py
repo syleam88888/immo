@@ -53,8 +53,18 @@ def run():
             time.sleep(2)
             
             # Récupération simple des liens (à adapter selon le layout)
-            links = page.locator("a[href*='/annonce/']").all_links()
-            unique_links = list(set([l for l in links if "www.immoweb.be" in l]))[:5] # Limite à 5 pour test rapide
+# On récupère tous les éléments qui sont des liens d'annonces
+locators = page.locator("a[href*='/annonce/']").all()
+links = [l.get_attribute("href") for l in locators]
+
+# On nettoie pour n'avoir que des liens complets et uniques
+unique_links = []
+for link in links:
+    if link and "www.immoweb.be" in link and link not in unique_links:
+        unique_links.append(link)
+
+# On limite à 5 pour le test
+unique_links = unique_links[:5]
 
             for link in unique_links:
                 try:

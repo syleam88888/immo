@@ -82,3 +82,20 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+import smtplib
+from email.mime.text import MIMEText
+
+def envoyer_email(nb_annonces):
+    sender = os.environ.get("EMAIL_SENDER")
+    password = os.environ.get("EMAIL_PASSWORD")
+    receiver = os.environ.get("EMAIL_RECEIVER")
+    
+    msg = MIMEText(f"Le robot Immo a terminé. {nb_annonces} annonces ont été traitées et analysées aujourd'hui.")
+    msg['Subject'] = f"Rapport Immo : {nb_annonces} annonces"
+    msg['From'] = sender
+    msg['To'] = receiver
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        server.login(sender, password)
+        server.sendmail(sender, receiver, msg.as_string())

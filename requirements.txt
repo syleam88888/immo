@@ -1,5 +1,4 @@
-psycopg2-binary
 playwright
-beautifulsoup4
-streamlit
 pandas
+psycopg2-binary
+python-dotenv

@@ -2,27 +2,31 @@ name: Daily Scraper
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # S'exécute tous les jours à 06h00 UTC
-  workflow_dispatch:      # Permet de lancer manuellement pour tester
+    - cron: '0 17 * * *'  # S'exécute à 17h00 UTC (18h00 en Belgique)
+  workflow_dispatch:      # <--- Ce bouton permet de lancer quand vous voulez !
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
+      - name: Install
         run: |
-          pip install -r requirements.txt
+          pip install playwright pandas psycopg2-binary
           playwright install chromium
 
-      - name: Run Scraper
+      - name: Run
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          EMAIL_RECEIVER: "dim.vandyck@gmail.com"
+          # On ajoute des secrets pour l'email (voir étape plus bas)
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: python main.py
